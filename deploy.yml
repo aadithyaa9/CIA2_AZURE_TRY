@@ -1,0 +1,10 @@
+---
+- name: Deploy Go App to Azure AKS
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Apply Kubernetes manifests
+      command: kubectl apply -f k8s.yaml
+    
+    - name: Restart deployment to pull the latest Docker image
+      command: kubectl rollout restart deployment/cia2-app

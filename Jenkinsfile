@@ -30,13 +30,11 @@ pipeline {
         }
         
         stage('Deploy to Azure AKS') {
-            steps {
-                // Requires Kubernetes CLI Plugin and kubeconfig credentials in Jenkins
-                withKubeConfig([credentialsId: 'azure-aks-kubeconfig']) {
-                    sh "kubectl apply -f k8s.yaml"
-                    sh "kubectl rollout restart deployment/cia2-app"
-                }
-            }
+        steps {
+        withKubeConfig([credentialsId: 'azure-aks-kubeconfig']) {
+            sh 'ansible-playbook deploy.yml'
         }
+    }
+}
     }
 }
