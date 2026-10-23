@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cia2-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cia2-app
+  template:
+    metadata:
+      labels:
+        app: cia2-app
+    spec:
+      containers:
+      - name: cia2-app
+        image: aadithyaar/cia2-app:latest
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cia2-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: cia2-app
