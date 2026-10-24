@@ -40,5 +40,18 @@ pipeline {
                 }
             }
         }
+
+        stage('Verify Deployment') {
+            steps {
+                withKubeConfig([credentialsId: 'azure-aks-kubeconfig']) {
+                    sh '''
+                    kubectl rollout status deployment/cia2-app
+                    SERVICE_IP=$(kubectl get svc cia2-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+                    echo "Verifying endpoint: http://$SERVICE_IP"
+                    curl -s http://$SERVICE_IP
+                    '''
+                }
+            }
+        }
     }
 }
