@@ -13,6 +13,11 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Test') {
+            steps {
+                sh 'go test -v ./...'
+            }
+        }
         
         stage('Build Docker Image') {
             steps {
@@ -31,7 +36,7 @@ pipeline {
         stage('Deploy to Azure AKS') {
             steps {
                 withKubeConfig([credentialsId: 'azure-aks-kubeconfig']) {
-                    sh 'export LC_ALL=C.UTF-8 && export LANG=C.UTF-8 && ansible-playbook deploy.yml'
+                    sh 'export LC_ALL=C.UTF-8 && export LANG=C.UTF-8 && ansible-playbook -i inventory.ini deploy.yml'
                 }
             }
         }
